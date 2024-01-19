@@ -66,7 +66,7 @@ namespace StoredProcuduresTest.Data
             }
         }
 
-        public IEnumerable<T> ExecuteSqlWithParameters<T>(string sql, List<SqlParameter> parameters)
+        public IEnumerable<T> ExecuteSqlWithParameters<T>(string sql, DynamicParameters parameters)
         {
             using IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             {

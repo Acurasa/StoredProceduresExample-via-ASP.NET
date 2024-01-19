@@ -27,10 +27,10 @@ namespace StoredProcuduresTest.Controller
         private readonly IDapperContext _dapper;
         private readonly IAuthHelper _authHelper;
 
-        public AuthController(IConfiguration config, IDapperContext dp, IAuthHelper ah)
+        public AuthController(IDapperContext dp, IAuthHelper hp)
         {
-            _authHelper = ah;
             _dapper = dp;
+            _authHelper = hp;
         }
 
         [AllowAnonymous]
@@ -62,7 +62,19 @@ namespace StoredProcuduresTest.Controller
                             ", @JobTitle = '" + userForRegistration.JobTitle +
                             "', @Department = '" + userForRegistration.Department +
                             "', @Salary = '" + userForRegistration.Salary + "'";
-         
+                        // string sqlAddUser = @"
+                        //     INSERT INTO TutorialAppSchema.Users(
+                        //         [FirstName],
+                        //         [LastName],
+                        //         [Email],
+                        //         [Gender],
+                        //         [Active]
+                        //     ) VALUES (" +
+                        //         "'" + userForRegistration.FirstName + 
+                        //         "', '" + userForRegistration.LastName +
+                        //         "', '" + userForRegistration.Email + 
+                        //         "', '" + userForRegistration.Gender + 
+                        //         "', 1)";
                         if (await _dapper.ExecuteSql(sqlAddUser))
                         {
                             return Ok();
@@ -128,16 +140,15 @@ namespace StoredProcuduresTest.Controller
         }
 
         [HttpGet("RefreshToken")]
-        public async Task<string> RefreshToken()
+        public string RefreshToken()
         {
             string userIdSql = @"
                 SELECT UserId FROM TutorialAppSchema.Users WHERE UserId = '" +
                 User.FindFirst("userId")?.Value + "'";
 
-            int userId = await _dapper.LoadDataSingleAsync<int>(userIdSql);
+            int userId = _dapper.LoadDataSingle<int>(userIdSql);
 
             return _authHelper.CreateToken(userId);
         }
-
     }
 }

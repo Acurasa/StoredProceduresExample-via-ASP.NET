@@ -13,15 +13,15 @@ using System.Text;
 
 namespace StoredProcuduresTest.Helpers
 {
-    public class AuthHelper : IAuthHelper
+    public class AuthHelper
     {
         private readonly IConfiguration _config;
         private readonly IDapperContext _dapper;
 
-        public AuthHelper(IConfiguration config, IDapperContext dp)
+        public AuthHelper(IDapperContext dp, IConfiguration cfg)
         {
             _dapper = dp;
-            _config = config;
+            _config = cfg;
         }
         public byte[] GetPasswordHash(string password, byte[] passwordSalt)
         {
@@ -101,6 +101,6 @@ namespace StoredProcuduresTest.Helpers
             return await _dapper.ExecuteSqlWithParameters(sqlAddAuth, sqlParameters);
         }
 
-        
+
     }
 }
